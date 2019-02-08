@@ -1,4 +1,4 @@
-module github.com/russross/blackfriday/v2
+module github.com/russross/yuin/v2
 
 require (
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
