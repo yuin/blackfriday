@@ -97,6 +97,9 @@ type HTMLRendererParameters struct {
 	CSS   string // Optional CSS file URL (used if CompletePage is set)
 	Icon  string // Optional icon file URL (used if CompletePage is set)
 
+	// How handles functions
+	FunctionHandler FunctionHandler
+
 	Flags HTMLFlags // Flags allow customizing this renderer's behavior
 }
 
@@ -133,6 +136,10 @@ func NewHTMLRenderer(params HTMLRendererParameters) *HTMLRenderer {
 
 	if params.FootnoteReturnLinkContents == "" {
 		params.FootnoteReturnLinkContents = `<sup>[return]</sup>`
+	}
+
+	if params.FunctionHandler == nil {
+		params.FunctionHandler = DefaultFunctionHandler
 	}
 
 	return &HTMLRenderer{
@@ -823,6 +830,11 @@ func (r *HTMLRenderer) RenderNode(w io.Writer, node *Node, entering bool) WalkSt
 		} else {
 			r.out(w, trCloseTag)
 			r.cr(w)
+		}
+	case Function:
+		err := r.FunctionHandler(w, node.FunctionData.Name, node.FunctionData.Arguments)
+		if err != nil {
+			fmt.Fprintf(w, "{{%s}}", err.Error())
 		}
 	default:
 		panic("Unknown node type " + node.Type.String())

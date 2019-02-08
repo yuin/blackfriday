@@ -127,6 +127,7 @@ type Node struct {
 	CodeBlockData // Populated if Type is CodeBlock
 	LinkData      // Populated if Type is Link
 	TableCellData // Populated if Type is TableCell
+	FunctionData  // Populated is Type is Fundtion
 
 	content []byte // Markdown content of the block nodes
 	open    bool   // Specifies an open block node that has not been finished to process yet

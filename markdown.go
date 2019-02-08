@@ -47,6 +47,7 @@ const (
 	AutoHeadingIDs                                // Create the heading ID from the text
 	BackslashLineBreak                            // Translate trailing backslashes into line breaks
 	DefinitionLists                               // Render definition lists
+	Functions                                     // Function like {{ name args }}
 
 	CommonHTMLFlags HTMLFlags = UseXHTML | Smartypants |
 		SmartypantsFractions | SmartypantsDashes | SmartypantsLatexDashes
@@ -304,6 +305,9 @@ func New(opts ...Option) *Markdown {
 		p.inlineCallback['H'] = maybeAutoLink
 		p.inlineCallback['M'] = maybeAutoLink
 		p.inlineCallback['F'] = maybeAutoLink
+	}
+	if p.extensions&Functions != 0 {
+		p.inlineCallback['{'] = function
 	}
 	if p.extensions&Footnotes != 0 {
 		p.notes = make([]*reference, 0)
